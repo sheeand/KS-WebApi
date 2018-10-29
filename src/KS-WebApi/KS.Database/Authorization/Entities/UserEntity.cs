@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KS.Database.Authorization.Invoker
+namespace KS.Database.Authorization.Entities
 {
-    class RegisterCreateUserInvoker
+    class UserEntity
     {
     }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KS.Database.Authorization.Command
+namespace KS.Database.Authorization.Contexts
 {
-    class RegisterCreateUserCommand
+    class KSContext
     {
     }
 }
