@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KS.Business.DataContract.Authorization
+namespace KS.API.DataContract.Authorization
 {
-    public class NewUserCreateDTO
+    public class UserLoginRequest
     {
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public string Password { get; set; }
     }
 }

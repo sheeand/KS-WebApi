@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KS.API.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase

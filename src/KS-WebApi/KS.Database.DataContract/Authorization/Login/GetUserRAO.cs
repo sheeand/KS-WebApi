@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KS.Business.DataContract.Authorization
+namespace KS.Database.DataContract.Authorization.Login
 {
-    public class NewUserCreateDTO
+    public class GetUserRAO
     {
         public string Username { get; set; }
         public string Password { get; set; }

@@ -10,7 +10,7 @@ namespace KS.Business.DataContract.Authorization
     {
         // Corresponds to ISP
 
-        Task<NewUserCreateDTO> RegisterUser(NewUserCreateRequest userRequest);
+        Task<bool> RegisterUser(NewUserCreateDTO userRequest);
 
     }
 }

@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KS.Database.DataContract.Authorization
+namespace KS.Database.DataContract.Authorization.Login
 {
-    public interface IAuthorizationReceiver
+    public interface IAuthorizationLoginReceiver
     {
-        Task<bool> RegisterUser(NewUserCreateDTO userDTO);
+        Task<bool> LoginUser(UserLoginRAO userDTO);
         //-- Login
         //-- User authentication check
 

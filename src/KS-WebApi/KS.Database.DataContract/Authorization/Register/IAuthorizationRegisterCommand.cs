@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KS.Database.DataContract.Authorization
+namespace KS.Database.DataContract.Authorization.Register
 {
-    public interface IAuthorizationCommand
+    public interface IAuthorizationRegisterCommand
     {
-        Task<bool> Execute(NewUserCreateDTO userDTO);
+        Task<bool> Execute(UserRegisterRAO userDTO);
 
     }
 }
