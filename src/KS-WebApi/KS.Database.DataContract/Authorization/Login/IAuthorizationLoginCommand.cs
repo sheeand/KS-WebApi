@@ -7,7 +7,7 @@ using KS.Business.DataContract.Authorization;
 namespace KS.Database.DataContract.Authorization.Login
 {
     public interface IAuthorizationLoginCommand
-    {
-        Task<bool> Execute(UserLoginRAO userDTO);
+    {//TODO: 0.3 Fix this
+        Task<ReceivedUserLoginRAO> Execute(GetUserRAO userRAO);
     }
 }

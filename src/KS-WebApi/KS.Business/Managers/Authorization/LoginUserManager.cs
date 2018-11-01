@@ -13,74 +13,36 @@ namespace KS.Business.Managers.Authorization
 {
     public class LoginUserManager : ILoginUserManager
     {
-        ///TODO GetUserByUser-Password
-        ///TODO Return 200
+        //TODO: 2 - Generate token for user method
+        //TODO: 3 - Add (inject) IConfigurationManager param to constructor and create read-only field
+        //TODO: 4 - Add GenerateTokenEngine class (provided by Paul on Slack)
+        //TODO: 5 - Inside of GenerateToken, create new instance of GenerateToken Engine
+        //TODO: 6 - GenerateTokenForUser method should return a token string
+
+        //TODO: 0.6 Fix implementation
+        //TODO: 0.7 In LoginUser method new-up password engine and if true then map Received RAO to a DTO
 
         private readonly IUserLoginInvoker _userLoginInvoker;
-        private readonly IGetUserInvoker _getUserInvoker;
         private readonly IMapper _mapper;
 
-        public LoginUserManager(IUserLoginInvoker userLoginInvoker, IGetUserInvoker getUserInvoker, IMapper mapper)
+        public LoginUserManager(IUserLoginInvoker userLoginInvoker, IMapper mapper)
         {
             _userLoginInvoker = userLoginInvoker;
-            _getUserInvoker = getUserInvoker;
             _mapper = mapper;
+            _userLoginInvoker = userLoginInvoker;
         }
 
-        public LoginUserManager()
+        public async Task<ReceivedUserLoginDTO> LoginUser(GetUserDTO incomingLoginDTO)
         {
-        }
+            var hashChecker = new VerifyPasswordHashEngine();
 
-        public async Task<bool> LoginUser(UserLoginDTO loginDTO)
-        {
-            var rao = PrepareUserRAOForLogin(loginDTO);
+            var receivedUser = await _userLoginInvoker.InvokeLoginUserCommand(_mapper.Map<GetUserRAO>(incomingLoginDTO)); 
 
-            if (rao.Password.Length > 0)
+            if (hashChecker.VerifyPasswordHash(incomingLoginDTO.Password, receivedUser.PasswordHash, receivedUser.PasswordSalt))
             {
-                return await _userLoginInvoker.InvokeLoginUserCommand(rao);
+                return _mapper.Map<ReceivedUserLoginDTO>(receivedUser);
             }
-            else
-            {
-                return false;
-            }
+            return null;
         }
-
-        // helper method
-        private UserLoginRAO PrepareUserRAOForLogin(UserLoginDTO userDTO)
-        {
-
-            byte[] passwordHash, passwordSalt;
-
-            //-- Create an instance of the engine
-            var hashEngine = new CreatePasswordHashEngine();
-
-            //-- Pass userDTO variable into CreatePasswordHash method to hash the password
-            hashEngine.CreatePaswordHash(userDTO.Password, out passwordHash, out passwordSalt);
-
-            UserLoginRAO rao = new UserLoginRAO();
-
-            var verifyEngine = new VerifyPasswordHashEngine();
-
-            bool isValid = verifyEngine.VerifyPasswordHash(userDTO.Password, passwordHash, passwordSalt);
-
-            if (isValid)
-            {
-                rao.Password = userDTO.Password;
-                rao.Username = userDTO.Username;
-                //rao = _mapper.Map<UserLoginRAO>(userDTO);
-            }
-
-            //verifyEngine.VerifyPasswordHash(userDTO.Password, passwordHash, passwordSalt);
-
-
-            return rao;
-        }
-
-        //public Task<bool> LoginUser(NewUserCreateDTO userLogin)
-        //{
-        //    var rao = PrepareUserRAOForRegister(userDTO);
-
-        //    return await _userRegisterInvoker.InvokeRegisterUserCommand(rao);
-        //}
     }
 }

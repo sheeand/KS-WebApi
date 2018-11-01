@@ -9,17 +9,17 @@ namespace KS.Database.Authorization.Login.Invokers
 {
     class GetUserInvoker
     {
-        private readonly IAuthorizationGetUserCommand _command;
+        private readonly IAuthorizationLoginCommand _command;
 
-        public GetUserInvoker(IAuthorizationGetUserCommand command)
+        public GetUserInvoker(IAuthorizationLoginCommand command)
         {
             _command = command;
         }
 
         // no mapping ncessary
-        public async Task<bool> InvokeGetUserCommandAsync(GetUserDTO userDTO)
+        public async Task<ReceivedUserLoginRAO> InvokeGetUserCommandAsync(GetUserRAO userRAO)
         {
-            return await _command.Execute(userDTO);
+            return await _command.Execute(userRAO);
         }
     }
 }

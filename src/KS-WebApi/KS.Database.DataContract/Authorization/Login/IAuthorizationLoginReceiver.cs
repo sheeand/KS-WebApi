@@ -8,9 +8,8 @@ namespace KS.Database.DataContract.Authorization.Login
 {
     public interface IAuthorizationLoginReceiver
     {
-        Task<bool> LoginUser(UserLoginRAO userDTO);
-        //-- Login
-        //-- User authentication check
 
+        // TODO: 0.2 Fix this
+        Task<ReceivedUserLoginRAO> LoginByUsername(GetUserRAO userRAO);
     }
 }

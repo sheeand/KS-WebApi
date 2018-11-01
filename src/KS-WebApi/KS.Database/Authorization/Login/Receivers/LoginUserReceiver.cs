@@ -4,6 +4,7 @@ using KS.Database.Contexts;
 using KS.Database.DataContract.Authorization;
 using KS.Database.DataContract.Authorization.Login;
 using KS.Database.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,24 +23,13 @@ namespace KS.Database.Authorization.Login.Receivers
             _mapper = mapper;
         }
 
-        public Task<bool> GetUserByUsername(UserLoginRAO userRAO)
+        public async Task<ReceivedUserLoginRAO> LoginByUsername(GetUserRAO userRAO)
         {
-            throw new NotImplementedException();
-        }
 
-        public async Task<bool> LoginUser(UserLoginRAO userRAO)
-        {
-            var userEntity = _mapper.Map<UserEntity>(userRAO);
-            userEntity.OwnerId = Guid.NewGuid();
+            //TODO: 0.1 Capture entity, map to received RAO, return the received RAO
 
-            return await CreateUser(userEntity);
-
-        }
-
-        private async Task<bool> CreateUser(UserEntity userEntity)
-        {
-            await _context.UserTableAccess.AddAsync(userEntity);
-            return await _context.SaveChangesAsync() == 1;
+            var userEntity = await _context.UserTableAccess.FirstOrDefaultAsync(x => x.Username == userRAO.Username);
+            return _mapper.Map<ReceivedUserLoginRAO>(userEntity);
         }
     }
 }

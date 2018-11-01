@@ -18,7 +18,7 @@ namespace KS.Database.Authorization.Login.Invokers
         }
 
         // no mapping ncessary
-        public async Task<bool> InvokeLoginUserCommand(UserLoginRAO userRAO)
+        public async Task<ReceivedUserLoginRAO> InvokeLoginUserCommand(GetUserRAO userRAO)
         {
             return await _command.Execute(userRAO);
         }

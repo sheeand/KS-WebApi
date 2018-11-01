@@ -28,6 +28,8 @@ namespace KS.API
 {
     public class Startup
     {
+        //TODO: 7- Add Configuration code (from Paul)
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;

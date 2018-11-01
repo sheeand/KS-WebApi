@@ -8,6 +8,9 @@ using KS.Business.DataContract.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+//TODO: 8 - (CHALLENGE!) Call GTFU and capture the token string
+//TODO: 9 - Change status code from created 201 to OK (token string, receive user)
+
 namespace KS.API.Controllers.Authorization
 {
     [Route("api/[controller]")]
@@ -26,17 +29,12 @@ namespace KS.API.Controllers.Authorization
         [HttpPost("LoginUser")]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest userLoggingIn)
         {
-            _mapper.Map<UserLoginDTO>(userLoggingIn);
-
             userLoggingIn.UserName = userLoggingIn.UserName.ToLower();
 
-            //-- Mapper maps UserLoginDTO to UserRegisterRAO
-            var dto = _mapper.Map<UserLoginDTO>(userLoggingIn);
+            var dto = _mapper.Map<GetUserDTO>(userLoggingIn);
 
             await _loginUserManager.LoginUser(dto);
             return StatusCode(200);
         }
-
-
     }
 }

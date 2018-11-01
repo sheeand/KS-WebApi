@@ -8,6 +8,6 @@ namespace KS.Database.DataContract.Authorization.Login
 {
     public interface IGetUserInvoker
     {
-        Task<bool> InvokeGetUserCommandAsync(UserLoginDTO userDTO);
+        Task<bool> InvokeGetUserCommandAsync(GetUserRAO userDTO);
     }
 }

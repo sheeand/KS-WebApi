@@ -9,16 +9,16 @@ namespace KS.Database.Authorization.Login.Commands
 {
     public class GetUserCommand
     {
-        private readonly IAuthorizationGetUserReceiver _receiver;
+        private readonly IAuthorizationLoginReceiver _receiver;
 
-        public GetUserCommand(IAuthorizationGetUserReceiver receiver)
+        public GetUserCommand(IAuthorizationLoginReceiver receiver)
         {
             _receiver = receiver;
         }
 
-        public async Task<bool> GetUserByUsername(GetUserRAO userRAO)
+        public async Task<ReceivedUserLoginRAO> GetUserByUsername(GetUserRAO userRAO)
         {
-            return await _receiver.GetUserByUsername(userRAO);
+            return await _receiver.LoginByUsername(userRAO);
         }
     }
 }

@@ -17,9 +17,9 @@ namespace KS.Database.Authorization.Login.Commands
             _receiver = receiver;
         }
 
-        public async Task<bool> Execute(UserLoginRAO userDTO)
+        public async Task<ReceivedUserLoginRAO> Execute(GetUserRAO userRAO)
         {
-            return await _receiver.LoginUser(userDTO);
+            return await _receiver.LoginByUsername(userRAO);
         }
     }
 }
