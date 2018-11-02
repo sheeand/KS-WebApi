@@ -4,6 +4,7 @@ using KS.Business.Engines.Authorization;
 using KS.Database.DataContract.Authorization;
 using KS.Database.DataContract.Authorization.Login;
 using KS.Database.Entities;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,12 +25,13 @@ namespace KS.Business.Managers.Authorization
 
         private readonly IUserLoginInvoker _userLoginInvoker;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public LoginUserManager(IUserLoginInvoker userLoginInvoker, IMapper mapper)
+        public LoginUserManager(IUserLoginInvoker userLoginInvoker, IConfiguration configuration, IMapper mapper)
         {
             _userLoginInvoker = userLoginInvoker;
             _mapper = mapper;
-            _userLoginInvoker = userLoginInvoker;
+            _configuration = configuration;
         }
 
         public async Task<ReceivedUserLoginDTO> LoginUser(GetUserDTO incomingLoginDTO)
@@ -43,6 +45,13 @@ namespace KS.Business.Managers.Authorization
                 return _mapper.Map<ReceivedUserLoginDTO>(receivedUser);
             }
             return null;
+        }
+
+        public string GenerateTokenForUser(ReceivedUserLoginDTO receivedUserLoginDTO)
+        {
+            var tokenEngine = new GenerateTokenEngine(_configuration);
+            string tokenString = tokenEngine.GenerateTokenString(receivedUserLoginDTO);
+            return tokenString;
         }
     }
 }

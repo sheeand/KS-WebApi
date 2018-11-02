@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using KS.Business.DataContract.Authorization;
@@ -14,6 +15,7 @@ using KS.Database.Authorization.Register.Receivers;
 using KS.Database.Contexts;
 using KS.Database.DataContract.Authorization.Login;
 using KS.Database.DataContract.Authorization.Register;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,6 +25,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace KS.API
 {
@@ -47,11 +50,10 @@ namespace KS.API
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
-
+            var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value);
             services.AddDbContext<KSContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            //-- The Mapper class provides implicit reference conversion from one reference type to another
             services.AddScoped<IRegisterUserManager, RegisterUserManager>();
             services.AddScoped<IAuthorizationRegisterCommand, RegisterUserCreateCommand>();
             services.AddScoped<IUserRegisterInvoker, RegisterUserCreateInvoker>();
@@ -61,10 +63,24 @@ namespace KS.API
             services.AddScoped<IAuthorizationLoginCommand, LoginUserCommand>();
             services.AddScoped<IUserLoginInvoker, LoginUserInvoker>();
             services.AddScoped<IAuthorizationLoginReceiver, LoginUserReceiver>();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) //<----You'll need all of this, too
+                                .AddJwtBearer(options => {
+                                    options.TokenValidationParameters = new TokenValidationParameters
+                                    {
+                                        ValidateIssuerSigningKey = true,
+                                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                                        ValidateIssuer = false,
+                                        ValidateAudience = false
+                                    };
+                                });
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });//<--- Up to here
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+            // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {

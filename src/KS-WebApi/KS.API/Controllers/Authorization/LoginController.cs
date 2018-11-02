@@ -33,8 +33,12 @@ namespace KS.API.Controllers.Authorization
 
             var dto = _mapper.Map<GetUserDTO>(userLoggingIn);
 
-            await _loginUserManager.LoginUser(dto);
-            return StatusCode(200);
+            var receivedDTO = await _loginUserManager.LoginUser(dto);
+
+            string tokenString = _loginUserManager.GenerateTokenForUser(receivedDTO);
+            return Ok(new { tokenString, });
+
+            //return StatusCode(200);
         }
     }
 }

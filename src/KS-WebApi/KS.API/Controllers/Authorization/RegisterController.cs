@@ -37,10 +37,16 @@ namespace KS.API.Controllers.Authorization
             userForResister.UserName = userForResister.UserName.ToLower();
             var dto = _mapper.Map<NewUserCreateDTO>(userForResister);
 
-            
+            var UserIsRegistered = await _registerUserManager.RegisterUser(dto);
 
-            await _registerUserManager.RegisterUser(dto);
-            return StatusCode(201);
+            if (UserIsRegistered)
+            {
+                return StatusCode(201);
+            }
+            else
+            {
+                return StatusCode(409);
+            }
         }
 
         //// GET: api/<controller>
